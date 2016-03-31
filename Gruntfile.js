@@ -3,6 +3,13 @@ module.exports = function(grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
     concat: {
+      options: {
+        separator: ';',
+      },
+      dist: {
+        src: ['**/*.js', ],
+        dest: 'public/dist.js'
+      },
     },
 
     mochaTest: {
@@ -21,6 +28,11 @@ module.exports = function(grunt) {
     },
 
     uglify: {
+      my_target: {
+        files: {
+          'dest/shortly.min.js': ['public/dist.js']
+        }
+      }
     },
 
     eslint: {
@@ -63,6 +75,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
+  grunt.loadNpmTasks('grunt-build-control');
 
   grunt.registerTask('server-dev', function (target) {
     // Running nodejs in a different process and displaying output on the main console
@@ -81,7 +94,7 @@ module.exports = function(grunt) {
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       // add your production server task here
-      
+
 
     }
     grunt.task.run([ 'server-dev' ]);
@@ -96,17 +109,20 @@ module.exports = function(grunt) {
   ]);
 
   grunt.registerTask('build', [
+
   ]);
 
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       // add your production server task here
+
+
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', ['nodemon']
+  grunt.registerTask('deploy', ['concat', 'uglify', 'upload', 'nodemon']
     // add your deploy tasks here
   );
 
