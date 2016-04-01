@@ -21,6 +21,14 @@ module.exports = function(grunt) {
       }
     },
 
+    bumper: {
+      options: {
+        files: ['**/*.js'],
+        pushTo: 'live',
+        releaseBranch: 'master'
+      }
+    },
+
     nodemon: {
       dev: {
         script: 'server.js'
@@ -36,9 +44,7 @@ module.exports = function(grunt) {
     },
 
     eslint: {
-      target: [
-        // Add list of files to lint here
-      ]
+      target: ['public/dist.js']      
     },
 
     cssmin: {
@@ -76,6 +82,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-shell');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-build-control');
+  grunt.loadNpmTasks('grunt-bumper');
+
 
   grunt.registerTask('server-dev', function (target) {
     // Running nodejs in a different process and displaying output on the main console
@@ -94,6 +102,7 @@ module.exports = function(grunt) {
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       // add your production server task here
+      //figure out how to push our repo to live master (digital ocean server)
 
 
     }
@@ -112,19 +121,21 @@ module.exports = function(grunt) {
 
   ]);
 
+  grunt.registerTask('deploy', 
+
+    ['test', 'concat', 'upload', 'nodemon']
+    // add your deploy tasks here
+  );
   grunt.registerTask('upload', function(n) {
     if (grunt.option('prod')) {
       // add your production server task here
-
+      ['deploy'];
 
     } else {
       grunt.task.run([ 'server-dev' ]);
     }
   });
 
-  grunt.registerTask('deploy', ['concat', 'uglify', 'upload', 'nodemon']
-    // add your deploy tasks here
-  );
 
 
 };
